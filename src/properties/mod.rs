@@ -1,3 +1,3 @@
 mod samplable;
 
-pub use samplable::Samplable;
+pub use self::samplable::Samplable;
