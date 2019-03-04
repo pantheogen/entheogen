@@ -1,0 +1,16 @@
+[package]
+name = "entheogen"
+description = "generative art primitives"
+version = "0.1.0"
+authors = ["pantheogen <pan@psychonautic.art>"]
+edition = "2018"
+
+[dependencies]
+alga = "0.8"
+nalgebra = "0.17"
+num = "0.2"
+palette = "0.4"
+
+[dependencies.cairo-rs]
+version = "0.6"
+features = ["png"]
