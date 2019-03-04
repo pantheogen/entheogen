@@ -3,7 +3,9 @@ name = "entheogen"
 description = "generative art primitives"
 version = "0.1.0"
 authors = ["pantheogen <pan@psychonautic.art>"]
-edition = "2018"
+license = "BSD-2-Clause"
+readme = "README.md"
+repository = "https://github.com/pantheogen/entheogen"
 
 [dependencies]
 alga = "0.8"
