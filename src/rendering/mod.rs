@@ -3,10 +3,10 @@
 use cairo::{Context, ImageSurface, Format};
 
 use std::fs::File;
-use std::io;
 use std::path::Path;
 
 use crate::primitives::point::Coordinate;
+use crate::error::*;
 
 #[derive(Debug)]
 pub struct Renderer<T> {
@@ -17,23 +17,27 @@ pub struct Renderer<T> {
 }
 
 impl<T: Coordinate> Renderer<T> {
-    pub fn new(width: T, height: T) -> Self {
+    pub fn new(width: T, height: T) -> Result<Self> {
         let w = width.as_();
         let h = height.as_();
 
-        // TODO: have this handled in a custom error type
-        let surface = ImageSurface::create(Format::ARgb32, w, h).unwrap();
+        let surface = ImageSurface::create(Format::ARgb32, w, h)
+            .map_err(Error::from)
+            .context("creating image surface")?;
+
         let context = Context::new(&surface);
 
-        Renderer {
+        Ok(Renderer {
             surface, context, width, height
-        }
+        })
     }
 
-    pub fn to_png<P: AsRef<Path>>(&self, path: P) -> Result<(), io::Error> {
+    pub fn to_png<P: AsRef<Path>>(&self, path: P) -> Result<()> {
         let path = path.as_ref();
-        let mut file = File::create(path)?;
+        let mut file = File::create(path)
+            .context("creating output png")?;
         self.surface.write_to_png(&mut file)
-            .map_err(|e| io::Error::new(io::ErrorKind::Other, e))
+            .context("writing to png")?;
+        Ok(())
     }
 }

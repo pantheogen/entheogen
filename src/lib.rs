@@ -12,13 +12,17 @@
 
 extern crate alga;
 extern crate cairo;
+extern crate failure;
+#[macro_use]
+extern crate failure_derive;
 extern crate nalgebra;
 extern crate num;
 extern crate palette;
 
 pub mod colour;
+pub mod error;
 pub mod primitives;
 pub mod properties;
 pub mod rendering;
 
-pub use primitives::point::Point;
+pub use primitives::point::{Coordinate, Point};
