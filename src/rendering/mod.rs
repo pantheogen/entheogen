@@ -6,6 +6,7 @@ use std::fs::File;
 use std::path::Path;
 
 use crate::primitives::point::Coordinate;
+use crate::properties::Plottable;
 use crate::error::*;
 
 #[derive(Debug)]
@@ -30,6 +31,15 @@ impl<T: Coordinate> Renderer<T> {
         Ok(Renderer {
             surface, context, width, height
         })
+    }
+
+    pub fn plot<P: Plottable>(&self, p: P) -> Result<()> {
+        for p in p.points().into_iter() {
+            self.context.set_line_width(1.0);
+            self.context.move_to(p.x, p.y);
+            self.context.stroke();
+        }
+        Ok(())
     }
 
     pub fn to_png<P: AsRef<Path>>(&self, path: P) -> Result<()> {

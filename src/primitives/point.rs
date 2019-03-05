@@ -2,7 +2,7 @@ use alga::general::Ring;
 use nalgebra::{Point2, Scalar};
 use num::cast::AsPrimitive;
 
-pub trait Coordinate: Ring + Scalar + AsPrimitive<i32> { }
+pub trait Coordinate: Ring + Scalar + AsPrimitive<i32> + AsPrimitive<f64> { }
 
 impl Coordinate for i32 { }
 impl Coordinate for f64 { }

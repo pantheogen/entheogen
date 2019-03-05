@@ -4,9 +4,9 @@ use crate::primitives::point::{Coordinate, Point};
 /// closed. This is required so we can sample a point within the area
 /// it encloses.
 pub trait Samplable {
-    type T: Coordinate;
+    type Coordinate: Coordinate;
     /// sample_path samples a point on the path described by the form.
-    fn sample_path(&self, step: Self::T) -> Point<Self::T>;
+    fn sample_path(&self, step: Self::Coordinate) -> Point<Self::Coordinate>;
     /// sample_area samples a point within the area covered by the form.
-    fn sample_area(&self, step: Self::T) -> Point<Self::T>;
+    fn sample_area(&self, step: Self::Coordinate) -> Point<Self::Coordinate>;
 }
