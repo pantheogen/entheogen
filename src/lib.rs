@@ -18,6 +18,8 @@ extern crate failure_derive;
 extern crate nalgebra;
 extern crate num;
 extern crate palette;
+#[macro_use]
+extern crate lazy_static;
 
 pub mod colour;
 pub mod error;

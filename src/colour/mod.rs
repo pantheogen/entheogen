@@ -9,11 +9,28 @@ use palette::Hsva;
 pub type RGBA = LinSrgba<f64>;
 pub type HSVA = Hsva<Srgb, f64>;
 
+// TODO: Colour trait
+
 pub mod prelude {
     pub use super::{RGBA, HSVA, RGBAColour, HSVAColour};
     pub use palette::{Blend, Component, Mix, Shade};
 }
 
+pub mod defaults {
+    use super::RGBAColour;
+
+    lazy_static! {
+        pub static ref BLACK: RGBAColour = {
+            RGBAColour::new(0.0, 0.0, 0.0)
+        };
+
+        pub static ref WHITE: RGBAColour = {
+            RGBAColour::new(255.0, 255.0, 255.0)
+        };
+    }
+}
+
+#[derive(Debug, Clone, Copy)]
 pub struct RGBAColour {
     r: f64,
     g: f64,

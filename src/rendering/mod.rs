@@ -1,12 +1,14 @@
 //! Rendering in Entheogen is currently performed using Cairo as a backend. We
 //! leverage the "png" feature to provide output in the form of "pngs".
-use cairo::{Context, ImageSurface, Format};
+use cairo::{Context, ImageSurface, Format, LineCap};
+use num::cast::AsPrimitive;
 
 use std::fs::File;
 use std::path::Path;
 
+use crate::colour::RGBAColour;
 use crate::primitives::point::Coordinate;
-use crate::properties::Plottable;
+use crate::properties::{AsPoint, Plottable};
 use crate::error::*;
 
 #[derive(Debug)]
@@ -33,10 +35,22 @@ impl<T: Coordinate> Renderer<T> {
         })
     }
 
+    pub fn fill(&self, colour: RGBAColour) -> Result<()> {
+        let colour = colour.rgba();
+        self.context.rectangle(0.0, 0.0, self.width.as_(), self.height.as_());
+        self.context.set_source_rgba(colour.red, colour.green, colour.blue, colour.alpha);
+        self.context.fill();
+        Ok(())
+    }
+
     pub fn plot<P: Plottable>(&self, p: P) -> Result<()> {
-        for p in p.points().into_iter() {
-            self.context.set_line_width(1.0);
-            self.context.move_to(p.x, p.y);
+        for p in p.to_points() {
+            let colour = p.colour().rgba();
+            self.context.set_source_rgba(colour.red, colour.green, colour.blue, colour.alpha);
+            self.context.set_line_width(p.weight());
+            self.context.set_line_cap(LineCap::Round);
+            self.context.move_to(p.x.as_(), p.y.as_());
+            self.context.line_to(p.x.as_(), p.y.as_());
             self.context.stroke();
         }
         Ok(())

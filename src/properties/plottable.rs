@@ -1,24 +1,29 @@
+use std::vec::IntoIter;
 use crate::primitives::point::{Coordinate, Point};
 
+use super::AsPoint;
+
 pub trait Plottable {
-    // TODO: Make this into an iterator
-    fn points(&self) -> Vec<Point<f64>>;
+    type Item: Coordinate;
+    type Iter: Iterator<Item=Point<Self::Item>>;
+
+    fn to_points(self) -> Self::Iter;
 }
 
-impl<T: Coordinate> Plottable for Point<T> {
-    fn points(&self) -> Vec<Point<f64>> {
-        vec![Point::new(self.x.as_(), self.y.as_())]
+impl<T: Coordinate> Plottable for Vec<Point<T>> {
+    type Item = T;
+    type Iter = IntoIter<Point<T>>;
+
+    fn to_points(self) -> Self::Iter {
+        self.into_iter()
     }
 }
 
-impl<'a, T: Coordinate> Plottable for &'a [Point<T>] {
-    fn points(&self) -> Vec<Point<f64>> {
-        self.iter().map(|p| Point::new(p.x.as_(), p.y.as_())).collect()
-    }
-}
+impl<P: AsPoint> Plottable for P {
+    type Item = <P as AsPoint>::Coordinate;
+    type Iter = IntoIter<Point<Self::Item>>;
 
-impl<'a, T: Coordinate> Plottable for Vec<Point<T>> {
-    fn points(&self) -> Vec<Point<f64>> {
-        self.as_slice().points()
+    fn to_points(self) -> Self::Iter {
+        vec![self.to_point()].into_iter()
     }
 }

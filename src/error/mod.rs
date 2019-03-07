@@ -13,6 +13,10 @@ pub enum Error {
     InvalidCanvasConfiguration {
         reason: &'static str,
     },
+    #[fail(display = "invalid parameter for form: {}", reason)]
+    InvalidParameter {
+        reason: &'static str,
+    },
     #[fail(display = "error: {}", reason)]
     Other {
         reason: String,
